@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Validate the commit message.
+
+message=$(cat "$1") || exit 1
+
+# Reject messages shorter than 10 characters.
+if [ "${#message}" -lt 10 ]; then
+    echo "ERROR: Commit message must be at least 10 characters long."
+    exit 1
+fi
+
+# Require an approved Conventional Commit prefix.
+case "$message" in
+    feat:*|fix:*|docs:*|refactor:*|chore:*)
+        ;;
+    *)
+        echo "ERROR: Message must start with feat:, fix:, docs:, refactor:, or chore:"
+        exit 1
+        ;;
+esac
+
+echo "Commit message check passed."
+exit 0

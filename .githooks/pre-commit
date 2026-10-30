@@ -1,0 +1,17 @@
+#!/bin/bash
+
+files=$(git diff --cached --name-only --diff-filter=ACMR)
+
+for file in $files; do
+    if [[ "$file" == ".githooks/pre-commit" ]]; then
+        continue
+    fi
+
+    if git show ":$file" 2>/dev/null | grep -nE 'TODO|FIXME'; then
+        echo "ERROR: Commit blocked!"
+        echo "A staged file contains TODO or FIXME."
+        exit 1
+    fi
+done
+
+exit 0
